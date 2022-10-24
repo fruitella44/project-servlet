@@ -1,5 +1,6 @@
 package com.tictactoe;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,15 +15,28 @@ import java.util.List;
 public class LogicServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // Получаем текущую сессию
         HttpSession currentSession = req.getSession();
         Field field = extractField(currentSession);
-        int index = getSelectedIndex(req);
 
+        int index = getSelectedIndex(req);
+        Sign currentSign = field.getField().get(index);
+
+        // Проверяем, что ячейка, у которой был клик пустая.
+        if (Sign.EMPTY != currentSign) {
+            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/index.jsp");
+            dispatcher.forward(req, resp);
+            return;
+        }
+
+        // AI отвечает тебе ноликами
         field.getField().put(index, Sign.CROSS);
+        int emptyIndex = field.getEmptyFieldIndex();
+        if (emptyIndex >= 0) {
+            field.getField().put(emptyIndex, Sign.NOUGHT);
+        }
+
         List<Sign> data = field.getFieldData();
 
-        // Обновляем объект поля и список значков в сессии
         currentSession.setAttribute("data", data);
         currentSession.setAttribute("field", field);
 
