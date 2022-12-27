@@ -9,4 +9,4 @@ After putting a sign 'X' in the cell, AI automatically puts '0' to the blank cel
 
 To restart this game, press the button bellow table
 
-![screen](https://imgur.com/aGWgjFW)
+![screen](https://i.imgur.com/aGWgjFW.png)
